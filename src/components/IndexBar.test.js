@@ -18,12 +18,14 @@ global.fetch = (url, ...params) => {
 };
 
 describe("IndexBar tests", () => {
+  beforeAll(() => {
+    // Ensure test database is initialized before an tests
+    return knex.migrate.rollback().then(() => knex.migrate.latest());
+  });
+
   beforeEach(() => {
     // Reset the test database before every test
-    return knex.migrate
-      .rollback()
-      .then(() => knex.migrate.latest())
-      .then(() => knex.seed.run());
+    return knex.seed.run();
   });
 
   describe("IndexBar: Basic IndexBar functionality", () => {
@@ -139,7 +141,7 @@ describe("IndexBar tests", () => {
       });
     });
 
-    test("IndexBar: currentarticle with new section reloads sections", async () => {
+    test("IndexBar: currentArticle with new section reloads sections", async () => {
       const { rerender } = render(
         <IndexBar setCurrentArticle={selectFunction} />
       );
